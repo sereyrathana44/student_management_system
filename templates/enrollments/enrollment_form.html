@@ -4,47 +4,53 @@
 {% block title %}{% if form.instance.pk %}Edit Enrollment{% else %}Add New Enrollment{% endif %} - BBU{% endblock %}
 
 {% block extra_css %}
-<!-- Tom Select CSS for Searchable Dropdowns -->
+<!-- Tom Select CSS for searchable dropdowns -->
 <link rel="stylesheet" href="{% static 'css/tom-select.bootstrap5.min.css' %}">
 <style>
+    /* Tom Select, blue theme */
     .ts-control {
-        border-radius: 0.375rem;
+        border-radius: 8px;
         padding: 0.55rem 0.85rem;
-        border: 1px solid #ced4da;
+        border: 1px solid #85B7EB;
         font-size: 0.95rem;
         box-shadow: none !important;
-        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     }
     .ts-control.focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25) !important;
+        border-color: #185FA5;
+        box-shadow: 0 0 0 .2rem rgba(24, 95, 165, .2) !important;
     }
     .ts-dropdown {
-        border-radius: 0.375rem;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        box-shadow: 0 10px 25px rgba(12, 68, 124, .15);
+        border: 1px solid #85B7EB;
         z-index: 1055;
     }
-    .ts-dropdown .option {
-        padding: 0.6rem 0.85rem;
-        font-size: 0.95rem;
+    .ts-dropdown .option { padding: 0.6rem 0.85rem; font-size: 0.95rem; }
+    .ts-dropdown .active { background-color: #185FA5 !important; color: #fff !important; }
+    .ts-dropdown .highlight { background-color: #B5D4F4; color: #0C447C; font-weight: 700; padding: 0 2px; border-radius: 2px; }
+
+    /* Page */
+    .ef-card { border: 1px solid #85B7EB; border-radius: 12px; overflow: hidden; }
+    .ef-header { background: #185FA5; color: #fff; padding: 1.1rem 1.4rem; display: flex; align-items: center; gap: 1rem; }
+    .ef-header .sub { color: #B5D4F4; }
+    .ef-icon { min-width: 52px; height: 52px; border-radius: 50%; background: #E6F1FB; color: #185FA5;
+               display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .ef-label i { color: #185FA5; margin-right: .5rem; }
+    .ef-card select, .ef-card input:not([type=checkbox]):not([type=radio]) {
+        width: 100%; padding: .55rem .85rem; border: 1px solid #85B7EB; border-radius: 8px; background: #fff;
     }
-    .ts-dropdown .active {
-        background-color: #2a5298 !important;
-        color: #ffffff !important;
+    .ef-card select:focus, .ef-card input:focus {
+        outline: none; border-color: #185FA5; box-shadow: 0 0 0 .2rem rgba(24, 95, 165, .2);
     }
-    .ts-dropdown .highlight {
-        background-color: #fff3cd;
-        color: #000;
-        font-weight: 700;
-        padding: 0 2px;
-        border-radius: 2px;
-    }
-    .search-hint {
-        font-size: 0.825rem;
-        color: #6c757d;
-        margin-top: 0.25rem;
-    }
+    .search-hint { display: flex; gap: .5rem; font-size: 0.825rem; color: #6c757d; margin-top: 0.4rem; }
+    .search-hint i { color: #185FA5; margin-top: .2rem; }
+    .ef-footer { background: #f4f8fc; border-top: 1px solid #B5D4F4; }
+    .btn-blue { background: #185FA5; border-color: #185FA5; color: #fff; }
+    .btn-blue:hover { background: #0C447C; border-color: #0C447C; color: #fff; }
+    .btn-outline-blue { border-color: #185FA5; color: #185FA5; }
+    .btn-outline-blue:hover { background: #E6F1FB; color: #0C447C; }
+    .breadcrumb a { color: #185FA5; text-decoration: none; }
 </style>
 {% endblock %}
 
@@ -61,87 +67,83 @@
 
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="card shadow-sm border-0 mb-4">
-                <div class="card-header bg-primary text-white py-3" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;">
-                    <h4 class="mb-0 fw-bold">
-                        {% if form.instance.pk %}
-                            ✏️ Edit Enrollment: {{ form.instance.student.student_id }} - {{ form.instance.course.code }}
-                        {% else %}
-                            📝 Add New Enrollment (ចុះឈ្មោះមុខវិជ្ជា)
-                        {% endif %}
-                    </h4>
-                    <p class="mb-0 text-white-50 small mt-1">ជ្រើសរើសនិស្សិត និងមុខវិជ្ជាដោយងាយស្រួលតាមរយៈការវាយស្វែងរក (Searchable Dropdown)</p>
+            <div class="card ef-card shadow-sm mb-4">
+                <div class="ef-header">
+                    <span class="ef-icon"><i class="fas {% if form.instance.pk %}fa-edit{% else %}fa-clipboard-list{% endif %}"></i></span>
+                    <div>
+                        <h4 class="h5 fw-bold mb-1">
+                            {% if form.instance.pk %}
+                                Edit enrollment: {{ form.instance.student.student_id }} - {{ form.instance.course.code }}
+                            {% else %}
+                                Add new enrollment (ចុះឈ្មោះមុខវិជ្ជា)
+                            {% endif %}
+                        </h4>
+                        <div class="sub small">ជ្រើសរើសនិស្សិត និងមុខវិជ្ជាដោយងាយស្រួលតាមរយៈការវាយស្វែងរក (Searchable Dropdown)</div>
+                    </div>
                 </div>
-                
-                <div class="card-body p-4">
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger shadow-sm border-0">
-                            {% for error in form.non_field_errors %}
-                                <div>⚠️ {{ error }}</div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
 
-                    <form method="post" novalidate>
-                        {% csrf_token %}
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="card-body p-4">
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger shadow-sm border-0">
+                                {% for error in form.non_field_errors %}
+                                    <div><i class="fas fa-exclamation-triangle me-1"></i> {{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
 
-                        <!-- Student Selection -->
+                        <!-- Student -->
                         <div class="mb-4">
-                            <label for="id_student" class="form-label fw-bold">
-                                👤 និស្សិត (Student) <span class="text-danger">*</span>
+                            <label for="id_student" class="form-label fw-bold ef-label">
+                                <i class="fas fa-user"></i>និស្សិត (Student) <span class="text-danger">*</span>
                             </label>
                             {{ form.student }}
                             {% if form.student.errors %}
-                                <div class="invalid-feedback d-block mt-1">
-                                    {{ form.student.errors.0 }}
-                                </div>
+                                <div class="invalid-feedback d-block mt-1">{{ form.student.errors.0 }}</div>
                             {% endif %}
                             <div class="search-hint">
-                                💡 <strong>គន្លឹះ៖</strong> វាយបញ្ចូលអត្តលេខ (ID ឧ. STU1001), ឈ្មោះខ្មែរ (ឧ. សុខ), ឬឈ្មោះឡាតាំង ដើម្បីស្វែងរកភ្លាមៗ
+                                <i class="fas fa-lightbulb"></i>
+                                <span><strong>គន្លឹះ៖</strong> វាយបញ្ចូលអត្តលេខ (ID ឧ. STU1001), ឈ្មោះខ្មែរ (ឧ. សុខ), ឬឈ្មោះឡាតាំង ដើម្បីស្វែងរកភ្លាមៗ</span>
                             </div>
                         </div>
 
-                        <!-- Course Selection -->
+                        <!-- Course -->
                         <div class="mb-4">
-                            <label for="id_course" class="form-label fw-bold">
-                                📚 មុខវិជ្ជា (Course) <span class="text-danger">*</span>
+                            <label for="id_course" class="form-label fw-bold ef-label">
+                                <i class="fas fa-book"></i>មុខវិជ្ជា (Course) <span class="text-danger">*</span>
                             </label>
                             {{ form.course }}
                             {% if form.course.errors %}
-                                <div class="invalid-feedback d-block mt-1">
-                                    {{ form.course.errors.0 }}
-                                </div>
+                                <div class="invalid-feedback d-block mt-1">{{ form.course.errors.0 }}</div>
                             {% endif %}
                             <div class="search-hint">
-                                💡 <strong>គន្លឹះ៖</strong> វាយបញ្ចូលកូដមុខវិជ្ជា (ឧ. IT-101), ឈ្មោះមុខវិជ្ជា (ឧ. Python, Database), ឬឈ្មោះសាស្រ្តាចារ្យ
+                                <i class="fas fa-lightbulb"></i>
+                                <span><strong>គន្លឹះ៖</strong> វាយបញ្ចូលកូដមុខវិជ្ជា (ឧ. IT-101), ឈ្មោះមុខវិជ្ជា (ឧ. Python, Database), ឬឈ្មោះសាស្រ្តាចារ្យ</span>
                             </div>
                         </div>
 
-                        <!-- Status Selection -->
-                        <div class="mb-4">
-                            <label for="id_status" class="form-label fw-bold">
-                                📌 ស្ថានភាព (Enrollment Status)
+                        <!-- Status -->
+                        <div class="mb-2">
+                            <label for="id_status" class="form-label fw-bold ef-label">
+                                <i class="fas fa-flag"></i>ស្ថានភាព (Enrollment status)
                             </label>
                             {{ form.status }}
                             {% if form.status.errors %}
-                                <div class="invalid-feedback d-block mt-1">
-                                    {{ form.status.errors.0 }}
-                                </div>
+                                <div class="invalid-feedback d-block mt-1">{{ form.status.errors.0 }}</div>
                             {% endif %}
                         </div>
+                    </div>
 
-                        <hr class="my-4">
-
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary px-4">
-                                💾 រក្សាទុក (Save Enrollment)
-                            </button>
-                            <a href="{% url 'enrollments:enrollment_list' %}" class="btn btn-outline-secondary px-4">
-                                ✖️ បោះបង់ (Cancel)
-                            </a>
-                        </div>
-                    </form>
-                </div>
+                    <div class="ef-footer d-flex gap-2 px-4 py-3">
+                        <button type="submit" class="btn btn-blue px-4">
+                            <i class="fas fa-save me-1"></i> រក្សាទុក (Save enrollment)
+                        </button>
+                        <a href="{% url 'enrollments:enrollment_list' %}" class="btn btn-outline-blue px-4">
+                            <i class="fas fa-times me-1"></i> បោះបង់ (Cancel)
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -149,45 +151,39 @@
 {% endblock %}
 
 {% block extra_js %}
-<!-- Tom Select JS for Instant Searchable Dropdowns -->
+<!-- Tom Select JS for instant searchable dropdowns -->
 <script src="{% static 'js/tom-select.complete.min.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Initialize Searchable Student Dropdown
+        // Searchable student dropdown
         const studentSelect = document.getElementById('id_student');
         if (studentSelect) {
             new TomSelect('#id_student', {
                 create: false,
                 maxOptions: 1000,
-                placeholder: '🔍 វាយអត្តលេខ, ឈ្មោះខ្មែរ ឬអង់គ្លេស...',
+                placeholder: 'វាយអត្តលេខ, ឈ្មោះខ្មែរ ឬអង់គ្លេស...',
                 allowEmptyOption: true,
-                sortField: {
-                    field: 'text',
-                    direction: 'asc'
-                },
+                sortField: { field: 'text', direction: 'asc' },
                 render: {
                     no_results: function (data, escape) {
-                        return '<div class="no-results p-2 text-muted">⚠️ រកមិនឃើញនិស្សិតឈ្មោះ "' + escape(data.input) + '" ឡើយ</div>';
+                        return '<div class="no-results p-2 text-muted">រកមិនឃើញនិស្សិតឈ្មោះ "' + escape(data.input) + '" ឡើយ</div>';
                     }
                 }
             });
         }
 
-        // Initialize Searchable Course Dropdown
+        // Searchable course dropdown
         const courseSelect = document.getElementById('id_course');
         if (courseSelect) {
             new TomSelect('#id_course', {
                 create: false,
                 maxOptions: 500,
-                placeholder: '🔍 វាយកូដមុខវិជ្ជា, ឈ្មោះមុខវិជ្ជា ឬសាស្រ្តាចារ្យ...',
+                placeholder: 'វាយកូដមុខវិជ្ជា, ឈ្មោះមុខវិជ្ជា ឬសាស្រ្តាចារ្យ...',
                 allowEmptyOption: true,
-                sortField: {
-                    field: 'text',
-                    direction: 'asc'
-                },
+                sortField: { field: 'text', direction: 'asc' },
                 render: {
                     no_results: function (data, escape) {
-                        return '<div class="no-results p-2 text-muted">⚠️ រកមិនឃើញមុខវិជ្ជា "' + escape(data.input) + '" ឡើយ</div>';
+                        return '<div class="no-results p-2 text-muted">រកមិនឃើញមុខវិជ្ជា "' + escape(data.input) + '" ឡើយ</div>';
                     }
                 }
             });

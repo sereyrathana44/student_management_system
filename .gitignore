@@ -81,3 +81,11 @@ dist/
 # Temporary & Antigravity/Agent Files
 scratch/
 .gemini/
+venv/
+__pycache__/
+*.pyc
+db.sqlite3
+venv/
+__pycache__/
+*.pyc
+db.sqlite3

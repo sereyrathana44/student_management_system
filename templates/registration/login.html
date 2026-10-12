@@ -3,28 +3,47 @@
 {% block title %}Login - Student Management System{% endblock %}
 
 {% block content %}
+<style>
+    .login-card { border: 1px solid #85B7EB; border-radius: 12px; overflow: hidden; }
+    .login-header { background: #185FA5; color: #fff; text-align: center; padding: 1.75rem 1rem; }
+    .login-icon { width: 52px; height: 52px; border-radius: 50%; background: #E6F1FB; color: #185FA5;
+                  display: inline-flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: .75rem; }
+    .login-header small { color: #B5D4F4; }
+    .login-card .input-group-text { background: #E6F1FB; border-color: #85B7EB; color: #185FA5; }
+    .login-card .form-control { border-color: #85B7EB; }
+    .login-card .form-control:focus { border-color: #185FA5; box-shadow: 0 0 0 .2rem rgba(24, 95, 165, .2); }
+    .login-card .btn-toggle { border: 1px solid #85B7EB; border-left: 0; background: #fff; color: #185FA5; }
+    .btn-blue { background: #185FA5; border-color: #185FA5; color: #fff; }
+    .btn-blue:hover { background: #0C447C; border-color: #0C447C; color: #fff; }
+    .login-footer { background: #E6F1FB; color: #0C447C; border-top: 1px solid #B5D4F4; }
+    .login-footer a { color: #185FA5; font-weight: 600; }
+</style>
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-primary text-white text-center py-3">
-                    <h4 class="mb-0">🔐 Account Login</h4>
+            <div class="card login-card shadow-sm">
+                <div class="login-header">
+                    <div class="login-icon"><i class="fas fa-user-graduate"></i></div>
+                    <h4 class="mb-0">Welcome Back </h4>
+                    <small>Sign in to the Student Management System</small>
                 </div>
+
                 <div class="card-body p-4">
                     {% if form.errors %}
                     <div class="alert alert-danger" role="alert">
-                        Invalid username or password. Please try again.
+                        Invalid username or password. Try again.
                     </div>
                     {% endif %}
 
                     {% if next %}
                         {% if user.is_authenticated %}
                         <div class="alert alert-warning" role="alert">
-                            Your account doesn't have access to this page. Please login with an authorized account.
+                            Your account doesn't have access to this page. Log in with an authorized account.
                         </div>
                         {% else %}
                         <div class="alert alert-info" role="alert">
-                            Please log in to view this page.
+                            Log in to view this page.
                         </div>
                         {% endif %}
                     {% endif %}
@@ -34,26 +53,49 @@
                         <input type="hidden" name="next" value="{{ next }}">
 
                         <div class="mb-3">
-                            <label for="id_username" class="form-label">Username</label>
-                            <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150" required id="id_username" class="form-control" placeholder="Enter username">
+                            <label for="id_username" class="form-label fw-semibold">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username"
+                                       maxlength="150" required id="id_username" class="form-control" placeholder="Enter username">
+                            </div>
                         </div>
 
                         <div class="mb-4">
-                            <label for="id_password" class="form-label">Password</label>
-                            <input type="password" name="password" autocomplete="current-password" required id="id_password" class="form-control" placeholder="Enter password">
+                            <label for="id_password" class="form-label fw-semibold">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" name="password" autocomplete="current-password"
+                                       required id="id_password" class="form-control" placeholder="Enter password">
+                                <button type="button" class="btn btn-toggle" id="togglePassword" aria-label="Show password">
+                                    <i class="fas fa-eye" id="toggleIcon"></i>
+                                </button>
+                            </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100 py-2">
-                            <i class="fas fa-sign-in-alt"></i> Login
+                        <button type="submit" class="btn btn-blue w-100 py-2 fw-semibold">
+                            <i class="fas fa-sign-in-alt me-1"></i> Log in
                         </button>
                     </form>
                 </div>
-                <div class="card-footer bg-light text-center py-3">
-                    <span class="text-muted">Don't have an account?</span>
-                    <a href="{% url 'students:register' %}" class="fw-bold">Register as a Student</a>
+
+                <div class="card-footer login-footer text-center py-3">
+                    Don't have an account?
+                    <a href="{% url 'students:register' %}">Register as a student</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('togglePassword').addEventListener('click', function () {
+        const input = document.getElementById('id_password');
+        const icon = document.getElementById('toggleIcon');
+        const show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        icon.className = show ? 'fas fa-eye-slash' : 'fas fa-eye';
+        this.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+    });
+</script>
 {% endblock %}

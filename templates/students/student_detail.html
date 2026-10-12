@@ -1,118 +1,100 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  .sd-card { border: 1px solid #85B7EB; border-radius: 12px; overflow: hidden; }
+  .sd-banner { background: #185FA5; color: #fff; padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
+  .sd-banner .sub { color: #B5D4F4; }
+  .sd-avatar { min-width: 72px; height: 72px; border-radius: 50%; background: #E6F1FB; color: #185FA5;
+               display: inline-flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 600; }
+  .sd-id { background: #E6F1FB; color: #0C447C; border-radius: 999px; padding: .15rem .7rem; font-size: .8rem; }
+  .sd-field { padding: .6rem 0; border-bottom: 1px solid #E6F1FB; }
+  .sd-field:last-child { border-bottom: 0; }
+  .sd-field small { display: block; color: #6c757d; }
+  .sd-field span { font-weight: 500; }
+  .sd-card .card-header { background: #E6F1FB; border-bottom: 1px solid #B5D4F4; color: #0C447C; font-weight: 600; }
+  .sd-table thead th { background: #E6F1FB; color: #0C447C; border-bottom: 1px solid #B5D4F4; font-weight: 600; }
+  .sd-table a { color: #185FA5; font-weight: 500; text-decoration: none; }
+  .sd-table a:hover { text-decoration: underline; }
+  .grade-pill { background: #E6F1FB; color: #0C447C; border: 1px solid #B5D4F4; border-radius: 999px; padding: .1rem .65rem; font-size: .8rem; }
+  .btn-blue { background: #185FA5; border-color: #185FA5; color: #fff; }
+  .btn-blue:hover { background: #0C447C; border-color: #0C447C; color: #fff; }
+  .btn-outline-blue { border-color: #185FA5; color: #185FA5; }
+  .btn-outline-blue:hover { background: #E6F1FB; color: #0C447C; }
+  .btn-soft { background: #E6F1FB; border-color: #B5D4F4; color: #0C447C; }
+  .btn-soft:hover { background: #B5D4F4; color: #0C447C; }
+  .breadcrumb a { color: #185FA5; text-decoration: none; }
+</style>
+
 <div class="container mt-4">
-  <!-- Breadcrumb -->
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-      <li class="breadcrumb-item">
-        <a href="{% url 'students:student_list' %}">Students</a>
-      </li>
-      <li class="breadcrumb-item active" aria-current="page">
-        {{ student.student_id }}
-      </li>
+      <li class="breadcrumb-item"><a href="{% url 'students:student_list' %}">Students</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ student.student_id }}</li>
     </ol>
   </nav>
 
-  <div class="row">
+  <div class="row g-3">
     <div class="col-lg-8">
-      <!-- Student Header Profile Card -->
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body p-4">
-          <div class="d-flex align-items-center mb-3">
-            <div class="me-3">
-              {% if student.profile_picture %}
-              <img
-                src="{{ student.profile_picture.url }}"
-                alt="{{ student.get_primary_name }}"
-                class="rounded-circle shadow-sm border"
-                width="75"
-                height="75"
-                style="object-fit: cover"
-              />
-              {% else %}
-              <div
-                class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold shadow-sm"
-                style="width: 75px; height: 75px; font-size: 1.8rem"
-              >
-                {% if student.khmer_name %}{{ student.khmer_name|slice:":1" }}{% elif student.user.first_name %}{{ student.user.first_name|slice:":1" }}{% else %}👤{% endif %}
-              </div>
-              {% endif %}
-            </div>
-            <div>
-              <!-- Primary Khmer Name -->
-              <h2 class="fw-bold text-primary mb-0">
-                {{ student.khmer_name|default:student.user.get_full_name }}
-              </h2>
-              {% if student.khmer_name and student.user.get_full_name %}
-              <h5 class="text-muted mb-1">{{ student.user.get_full_name }}</h5>
-              {% endif %}
-              <span class="badge bg-dark-subtle text-dark border me-2"
-                >ID: {{ student.student_id }}</span
-              >
-              {% if student.is_active %}
-              <span class="badge bg-success">Active</span>
-              {% else %}
-              <span class="badge bg-secondary">Inactive</span>
-              {% endif %}
-            </div>
+
+      <!-- Profile card -->
+      <div class="card sd-card shadow-sm mb-4">
+        <div class="sd-banner">
+          {% if student.profile_picture %}
+          <img src="{{ student.profile_picture.url }}" alt="{{ student.get_primary_name }}"
+               class="rounded-circle border border-2 border-white" width="72" height="72" style="object-fit: cover" />
+          {% else %}
+          <div class="sd-avatar">
+            {% if student.khmer_name %}{{ student.khmer_name|slice:":1" }}{% elif student.user.first_name %}{{ student.user.first_name|slice:":1"|upper }}{% else %}<i class="fas fa-user"></i>{% endif %}
           </div>
+          {% endif %}
 
-          <hr />
+          <div>
+            <h2 class="h4 fw-bold mb-0">{{ student.khmer_name|default:student.user.get_full_name }}</h2>
+            {% if student.khmer_name and student.user.get_full_name %}
+            <div class="sub mb-1">{{ student.user.get_full_name }}</div>
+            {% endif %}
+            <span class="sd-id">ID: {{ student.student_id }}</span>
+            {% if student.is_active %}
+            <span class="badge bg-success">Active</span>
+            {% else %}
+            <span class="badge bg-secondary">Inactive</span>
+            {% endif %}
+          </div>
+        </div>
 
-          <div class="row mb-3">
+        <div class="card-body px-4 py-3">
+          <div class="row">
             <div class="col-md-6">
-              <p class="mb-2">
-                <strong>Khmer Name:</strong>
-                <span class="text-primary fw-bold">{{ student.khmer_name|default:"—" }}</span>
-              </p>
-              <p class="mb-2">
-                <strong>English Name:</strong> {{ student.user.get_full_name|default:student.user.username }}
-              </p>
-              <p class="mb-2">
-                <strong>Student ID:</strong> {{ student.student_id }}
-              </p>
-              <p class="mb-2">
-                <strong>Email:</strong> {{ student.user.email }}
-              </p>
-              <p class="mb-2">
-                <strong>Phone:</strong> {{ student.phone_number|default:"—" }}
-              </p>
-              <p class="mb-2">
-                <strong>Gender:</strong> {{ student.get_gender_display }}
-              </p>
+              <div class="sd-field"><small>Khmer name</small><span>{{ student.khmer_name|default:"—" }}</span></div>
+              <div class="sd-field"><small>English name</small><span>{{ student.user.get_full_name|default:student.user.username }}</span></div>
+              <div class="sd-field"><small>Student ID</small><span>{{ student.student_id }}</span></div>
+              <div class="sd-field"><small>Email</small><span>{{ student.user.email }}</span></div>
+              <div class="sd-field"><small>Phone</small><span>{{ student.phone_number|default:"—" }}</span></div>
+              <div class="sd-field"><small>Gender</small><span>{{ student.get_gender_display }}</span></div>
             </div>
             <div class="col-md-6">
-              <p class="mb-2">
-                <strong>Date of Birth:</strong> {{ student.date_of_birth }}
-              </p>
-              <p class="mb-2">
-                <strong>Address:</strong> {{ student.address }}
-              </p>
-              <p class="mb-2"><strong>City:</strong> {{ student.city }}</p>
-              <p class="mb-2">
-                <strong>Country:</strong> {{ student.country }}
-              </p>
-              <p class="mb-2">
-                <strong>Enrollment Date:</strong> {{ student.enrollment_date|date:"Y-m-d" }}
-              </p>
-              <p class="mb-2">
-                <strong>GPA:</strong>
-                <span class="badge bg-info text-dark">{{ student.gpa }}</span>
-              </p>
+              <div class="sd-field"><small>Date of birth</small><span>{{ student.date_of_birth }}</span></div>
+              <div class="sd-field"><small>Address</small><span>{{ student.address }}</span></div>
+              <div class="sd-field"><small>City</small><span>{{ student.city }}</span></div>
+              <div class="sd-field"><small>Country</small><span>{{ student.country }}</span></div>
+              <div class="sd-field"><small>Enrollment date</small><span>{{ student.enrollment_date|date:"Y-m-d" }}</span></div>
+              <div class="sd-field"><small>GPA</small><span class="text-primary fs-5">{{ student.gpa }}</span></div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Enrollments Section -->
-      <div class="mt-4">
-        <h3>Enrollments</h3>
+      <!-- Enrollments -->
+      <div class="card sd-card shadow-sm">
+        <div class="card-header"><i class="fas fa-book me-2"></i>Enrollments</div>
         {% if student.enrollments.all %}
         <div class="table-responsive">
-          <table class="table table-striped table-hover align-middle">
-            <thead class="table-light">
+          <table class="table sd-table table-hover align-middle mb-0">
+            <thead>
               <tr>
-                <th>Course Code & Title</th>
+                <th>Course code and title</th>
                 <th>Score</th>
                 <th>Grade</th>
                 <th>Status</th>
@@ -122,66 +104,46 @@
               {% for enrollment in student.enrollments.all %}
               <tr>
                 <td>
-                  <a
-                    href="{% url 'courses:course_detail' enrollment.course.pk %}"
-                    class="fw-semibold text-decoration-none"
-                  >
+                  <a href="{% url 'courses:course_detail' enrollment.course.pk %}">
                     {{ enrollment.course.code }} - {{ enrollment.course.title }}
                   </a>
                 </td>
                 <td>{{ enrollment.score|default:"—" }}</td>
                 <td>
                   {% if enrollment.grade %}
-                  <span class="badge bg-primary">{{ enrollment.grade }}</span>
+                  <span class="grade-pill">{{ enrollment.grade }}</span>
                   {% else %}
                   <span class="text-muted">—</span>
                   {% endif %}
                 </td>
-                <td>
-                  <span class="badge bg-secondary"
-                    >{{ enrollment.get_status_display }}</span
-                  >
-                </td>
+                <td>{{ enrollment.get_status_display }}</td>
               </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
         {% else %}
-        <p class="text-muted">No enrollments yet.</p>
+        <div class="card-body text-muted">No enrollments yet.</div>
         {% endif %}
       </div>
     </div>
 
+    <!-- Actions -->
     <div class="col-lg-4">
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-primary text-white py-3">
-          <h5 class="mb-0">Actions</h5>
-        </div>
-        <div class="card-body">
-          <a
-            href="{% url 'enrollments:student_transcript' student.student_id %}"
-            class="btn btn-info text-white btn-sm w-100 mb-2"
-          >
-            <i class="fas fa-file-alt"></i> 📄 View Transcript
+      <div class="card sd-card shadow-sm">
+        <div class="card-header"><i class="fas fa-bolt me-2"></i>Actions</div>
+        <div class="card-body d-grid gap-2">
+          <a href="{% url 'enrollments:student_transcript' student.student_id %}" class="btn btn-blue btn-sm">
+            <i class="fas fa-file-alt me-1"></i> View transcript
           </a>
-          <a
-            href="{% url 'students:student_update' student.id %}"
-            class="btn btn-warning btn-sm w-100 mb-2"
-          >
-            <i class="fas fa-edit"></i> ✏️ Edit Profile
+          <a href="{% url 'students:student_update' student.id %}" class="btn btn-outline-blue btn-sm">
+            <i class="fas fa-edit me-1"></i> Edit profile
           </a>
-          <a
-            href="{% url 'students:student_delete' student.id %}"
-            class="btn btn-danger btn-sm w-100 mb-2"
-          >
-            <i class="fas fa-trash"></i> 🗑️ Delete Student
+          <a href="{% url 'students:student_delete' student.id %}" class="btn btn-outline-blue btn-sm">
+            <i class="fas fa-trash me-1"></i> Delete student
           </a>
-          <a
-            href="{% url 'students:student_list' %}"
-            class="btn btn-outline-secondary btn-sm w-100"
-          >
-            <i class="fas fa-arrow-left"></i> Back to List
+          <a href="{% url 'students:student_list' %}" class="btn btn-soft btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> Back to list
           </a>
         </div>
       </div>

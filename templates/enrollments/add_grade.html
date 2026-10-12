@@ -1,69 +1,104 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    .gf-hero { background: #185FA5; color: #fff; border-radius: 12px; padding: 1.1rem 1.4rem; display: flex; align-items: center; gap: 1rem; }
+    .gf-hero .sub { color: #B5D4F4; }
+    .gf-icon { min-width: 52px; height: 52px; border-radius: 50%; background: #E6F1FB; color: #185FA5;
+               display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .gf-card { border: 1px solid #85B7EB; border-radius: 12px; overflow: hidden; }
+    .gf-card .card-header { background: #E6F1FB; border-bottom: 1px solid #B5D4F4; color: #0C447C; font-weight: 600; padding: .8rem 1.25rem; }
+    .gf-card .card-header i { color: #185FA5; margin-right: .5rem; }
+    .gf-card input:not([type=checkbox]):not([type=radio]), .gf-card select, .gf-card textarea {
+        width: 100%; padding: .5rem .75rem; border: 1px solid #85B7EB; border-radius: 8px; background: #fff;
+    }
+    .gf-card input:focus, .gf-card select:focus, .gf-card textarea:focus {
+        outline: none; border-color: #185FA5; box-shadow: 0 0 0 .2rem rgba(24, 95, 165, .2);
+    }
+    .gf-tile { background: #E6F1FB; border: 1px solid #B5D4F4; border-radius: 10px; padding: .8rem; text-align: center; height: 100%; }
+    .gf-tile small { display: block; color: #0C447C; }
+    .gf-tile strong { display: block; font-size: 1.25rem; color: #185FA5; font-weight: 600; }
+    .btn-blue { background: #185FA5; border-color: #185FA5; color: #fff; }
+    .btn-blue:hover { background: #0C447C; border-color: #0C447C; color: #fff; }
+    .btn-outline-blue { border-color: #185FA5; color: #185FA5; }
+    .btn-outline-blue:hover { background: #E6F1FB; color: #0C447C; }
+    .invalid-feedback { color: #dc3545; font-size: .875em; }
+</style>
+
 <div class="container mt-4">
     <div class="row">
         <div class="col-lg-8">
-            <h1>Add Grade - {{ enrollment.student.user.get_full_name }}</h1>
-            <h5 class="text-muted">{{ enrollment.course.code }} - {{ enrollment.course.title }}</h5>
-            <hr>
-            
+
+            <div class="gf-hero mb-4">
+                <span class="gf-icon"><i class="fas fa-certificate"></i></span>
+                <div>
+                    <h1 class="h4 fw-bold mb-1">Add grade - {{ enrollment.student.user.get_full_name }}</h1>
+                    <div class="sub">{{ enrollment.course.code }} - {{ enrollment.course.title }}</div>
+                </div>
+            </div>
+
             <form method="post" novalidate>
                 {% csrf_token %}
-                
-                <div class="card">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="mb-0">Grade Entry</h5>
-                    </div>
-                    <div class="card-body">
+
+                <div class="card gf-card shadow-sm mb-3">
+                    <div class="card-header"><i class="fas fa-pen"></i>Grade entry</div>
+                    <div class="card-body p-4">
                         {% if form.non_field_errors %}
-                            <div class="alert alert-danger">
-                                {{ form.non_field_errors }}
-                            </div>
+                            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
                         {% endif %}
-                        
+
                         {% for field in form %}
                             <div class="mb-3">
-                                <label for="{{ field.id_for_label }}" class="form-label">
-                                    {{ field.label }}
-                                </label>
-                                
+                                <label for="{{ field.id_for_label }}" class="form-label fw-semibold">{{ field.label }}</label>
+                                {{ field }}
                                 {% if field.errors %}
-                                    {{ field }}
-                                    <div class="invalid-feedback d-block">
-                                        {{ field.errors.0 }}
-                                    </div>
-                                {% else %}
-                                    {{ field }}
+                                    <div class="invalid-feedback d-block">{{ field.errors.0 }}</div>
                                 {% endif %}
-                                
                                 {% if field.help_text %}
-                                    <small class="form-text text-muted d-block mt-1">
-                                        {{ field.help_text|safe }}
-                                    </small>
+                                    <small class="form-text text-muted d-block mt-1">{{ field.help_text|safe }}</small>
                                 {% endif %}
                             </div>
                         {% endfor %}
                     </div>
                 </div>
-                
-                <div class="card mt-3">
-                    <div class="card-header bg-info text-white">
-                        <h5 class="mb-0">Current Information</h5>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Current Score:</strong> {{ enrollment.score|default:"Not set" }}</p>
-                        <p><strong>Current Grade:</strong> {{ enrollment.grade|default:"Not set" }}</p>
-                        <p><strong>Current Attendance:</strong> {{ enrollment.attendance_percentage|default:"Not set" }}%</p>
-                        <p><strong>Status:</strong> <span class="badge bg-secondary">{{ enrollment.get_status_display }}</span></p>
+
+                <div class="card gf-card shadow-sm mb-3">
+                    <div class="card-header"><i class="fas fa-info-circle"></i>Current information</div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-6 col-md-3">
+                                <div class="gf-tile">
+                                    <small>Current score</small>
+                                    <strong>{{ enrollment.score|default:"Not set" }}</strong>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="gf-tile">
+                                    <small>Current grade</small>
+                                    <strong>{{ enrollment.grade|default:"Not set" }}</strong>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="gf-tile">
+                                    <small>Attendance</small>
+                                    <strong>{% if enrollment.attendance_percentage is not None %}{{ enrollment.attendance_percentage }}%{% else %}Not set{% endif %}</strong>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="gf-tile">
+                                    <small>Status</small>
+                                    <strong class="fs-6 pt-1">{{ enrollment.get_status_display }}</strong>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="mt-3">
-                    <button type="submit" class="btn btn-success">
-                        <i class="fas fa-check"></i> Submit Grade
+
+                <div class="d-flex gap-2 mb-4">
+                    <button type="submit" class="btn btn-blue btn-lg px-4">
+                        <i class="fas fa-check"></i> Submit grade
                     </button>
-                    <a href="{% url 'enrollments:enrollment_detail' enrollment.id %}" class="btn btn-secondary">
+                    <a href="{% url 'enrollments:enrollment_detail' enrollment.id %}" class="btn btn-outline-blue btn-lg px-4">
                         <i class="fas fa-times"></i> Cancel
                     </a>
                 </div>
@@ -71,9 +106,4 @@
         </div>
     </div>
 </div>
-
-<style>
-    .form-control, .form-select, textarea { margin-top: 5px; }
-    .invalid-feedback { color: #dc3545; font-size: 0.875em; }
-</style>
 {% endblock %}

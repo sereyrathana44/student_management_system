@@ -1,38 +1,70 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    .del-card { border: 1px solid #85B7EB; border-radius: 12px; overflow: hidden; }
+    .del-header { background: #185FA5; color: #fff; text-align: center; padding: 1.5rem 1rem; }
+    .del-header small { color: #B5D4F4; }
+    .del-icon { width: 52px; height: 52px; border-radius: 50%; background: #E6F1FB; color: #185FA5;
+                display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: .6rem; }
+    .del-info { background: #E6F1FB; border: 1px solid #B5D4F4; border-radius: 10px; color: #0C447C; padding: .25rem 1rem; }
+    .del-row { display: flex; align-items: center; gap: .75rem; padding: .6rem 0; border-bottom: 1px solid #B5D4F4; }
+    .del-row:last-child { border-bottom: 0; }
+    .del-row i { color: #185FA5; width: 18px; text-align: center; }
+    .del-row .label { color: #185FA5; min-width: 62px; }
+    .status-pill { background: #185FA5; color: #fff; border-radius: 999px; padding: .1rem .7rem; font-size: .8rem; }
+    .btn-blue { background: #185FA5; border-color: #185FA5; color: #fff; }
+    .btn-blue:hover { background: #0C447C; border-color: #0C447C; color: #fff; }
+    .btn-outline-blue { border-color: #185FA5; color: #185FA5; }
+    .btn-outline-blue:hover { background: #E6F1FB; color: #0C447C; }
+</style>
+
 <div class="container mt-4">
     <div class="row">
         <div class="col-lg-6 mx-auto">
-            <div class="card border-danger">
-                <div class="card-header bg-danger text-white">
-                    <h5 class="mb-0">Confirm Delete</h5>
+            <div class="card del-card shadow-sm">
+                <div class="del-header">
+                    <div class="del-icon"><i class="fas fa-clipboard-list"></i></div>
+                    <h5 class="mb-1">Confirm delete</h5>
+                    <small>Are you sure you want to delete this enrollment?</small>
                 </div>
-                <div class="card-body">
-                    <p class="lead">Are you sure you want to delete this enrollment?</p>
-                    
-                    <div class="alert alert-warning">
-                        <strong>Student:</strong> {{ enrollment.student.user.get_full_name }}<br>
-                        <strong>Course:</strong> {{ enrollment.course.code }} - {{ enrollment.course.title }}<br>
-                        <strong>Status:</strong> {{ enrollment.get_status_display }}
+
+                <div class="card-body p-4">
+                    <div class="del-info">
+                        <div class="del-row">
+                            <i class="fas fa-user"></i>
+                            <span class="label">Student</span>
+                            <strong>{{ enrollment.student.user.get_full_name }}</strong>
+                        </div>
+                        <div class="del-row">
+                            <i class="fas fa-book"></i>
+                            <span class="label">Course</span>
+                            <strong>{{ enrollment.course.code }} - {{ enrollment.course.title }}</strong>
+                        </div>
+                        <div class="del-row">
+                            <i class="fas fa-flag"></i>
+                            <span class="label">Status</span>
+                            <span class="status-pill">{{ enrollment.get_status_display }}</span>
+                        </div>
                     </div>
-                    
-                    <p class="text-danger">
-                        <strong>Warning:</strong> This action cannot be undone. The enrollment record will be permanently deleted.
+
+                    <p class="text-muted small mt-3 mb-0">
+                        <i class="fas fa-info-circle text-primary me-1"></i>
+                        This action cannot be undone. The enrollment record will be permanently deleted.
                     </p>
                 </div>
-            </div>
-            
-            <div class="mt-3">
-                <form method="post" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash"></i> Yes, Delete
-                    </button>
-                </form>
-                <a href="{% url 'enrollments:enrollment_detail' enrollment.id %}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Cancel
-                </a>
+
+                <div class="card-footer bg-light d-flex justify-content-end gap-2">
+                    <a href="{% url 'enrollments:enrollment_detail' enrollment.id %}" class="btn btn-outline-blue">
+                        <i class="fas fa-arrow-left"></i> Cancel
+                    </a>
+                    <form method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-blue">
+                            <i class="fas fa-trash"></i> Yes, delete
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

@@ -4,58 +4,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Student Management System{% endblock %}</title>
+    <title>{% block title %}Student Management System {% endblock %}</title>
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
-        body {
-            background-color: #f8f9fa;
+        /* Khmer font: applies to Khmer characters only */
+        @font-face {
+            font-family: 'KhmerOS battambang';
+            src: local('KhmerOS battambang'),
+                 local('Khmer OS Battambang'),
+                 local('KhmerOS_battambang'),
+                 local('KhmerOSbattambang'),
+                 url("{% static 'fonts/KhmerOSbattambang.ttf' %}") format('truetype');
+            unicode-range: U+1780-17FF, U+19E0-19FF;
         }
-        .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+
+        /* Blue theme: bg-primary, text-primary, and btn-primary all follow these */
+        :root {
+            --bs-primary: #185FA5;
+            --bs-primary-rgb: 24, 95, 165;
+            --bs-link-color: #185FA5;
+            --bs-link-hover-color: #0C447C;
+            --bs-body-font-family: 'KhmerOS battambang', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
         }
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 1.3rem;
-        }
-        .card {
-            border: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,.1);
-            margin-bottom: 20px;
-        }
+
+        body { background-color: #f4f8fc; }
+
+        .navbar { background: #185FA5; box-shadow: 0 2px 6px rgba(12, 68, 124, .25); }
+        .navbar-brand { font-weight: 600; font-size: 1.25rem; }
+        .navbar .nav-link { color: #E6F1FB; }
+        .navbar .nav-link:hover, .navbar .nav-link.active { color: #fff; }
+        .navbar .nav-link.active { border-bottom: 2px solid #B5D4F4; }
+
+        .card { border: none; box-shadow: 0 2px 8px rgba(12, 68, 124, .08); margin-bottom: 20px; }
+
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
+            --bs-btn-bg: #185FA5;
+            --bs-btn-border-color: #185FA5;
+            --bs-btn-hover-bg: #0C447C;
+            --bs-btn-hover-border-color: #0C447C;
+            --bs-btn-active-bg: #0C447C;
+            --bs-btn-active-border-color: #0C447C;
+            --bs-btn-disabled-bg: #185FA5;
+            --bs-btn-disabled-border-color: #185FA5;
         }
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        .btn-outline-primary {
+            --bs-btn-color: #185FA5;
+            --bs-btn-border-color: #185FA5;
+            --bs-btn-hover-bg: #185FA5;
+            --bs-btn-hover-border-color: #185FA5;
         }
-        .table-hover tbody tr:hover {
-            background-color: #f5f5f5;
-        }
+
+        .table-hover tbody tr:hover { background-color: #E6F1FB; }
+
+        .site-footer { background: #E6F1FB; border-top: 1px solid #B5D4F4; color: #0C447C; }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">📚 Student Management System</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="fas fa-user-graduate me-2"></i>Student Management System By Sereyrathana (A1IT_B103)
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'students:student_list' %}">Students</a>
+                        <a class="nav-link {% if request.resolver_match.app_name == 'students' %}active{% endif %}" href="{% url 'students:student_list' %}">Students</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'courses:course_list' %}">Courses</a>
+                        <a class="nav-link {% if request.resolver_match.app_name == 'courses' %}active{% endif %}" href="{% url 'courses:course_list' %}">Courses</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'enrollments:enrollment_list' %}">Enrollments</a>
+                        <a class="nav-link {% if request.resolver_match.app_name == 'enrollments' %}active{% endif %}" href="{% url 'enrollments:enrollment_list' %}">Enrollments</a>
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
@@ -63,20 +90,27 @@
                     </li>
                     <li class="nav-item dropdown ms-lg-2">
                         <a class="nav-link dropdown-toggle btn btn-sm btn-outline-light text-white px-3" href="#" role="button" data-bs-toggle="dropdown">
-                            👤 {{ user.username }}
+                            <i class="fas fa-user-circle me-1"></i>{{ user.username }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow-sm">
                             <li><span class="dropdown-item-text text-muted small">{{ user.email|default:"No email" }}</span></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                            <li>
+                                <form method="post" action="{% url 'logout' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="fas fa-sign-out-alt me-1"></i> Log out
+                                    </button>
+                                </form>
+                            </li>
                         </ul>
                     </li>
                     {% else %}
                     <li class="nav-item ms-lg-2">
-                        <a class="nav-link btn btn-sm btn-outline-light text-white px-3 me-2" href="{% url 'login' %}">Login</a>
+                        <a class="nav-link btn btn-sm btn-outline-light text-white px-3 me-2" href="{% url 'login' %}">Log in</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-sm btn-light text-primary fw-bold px-3" href="{% url 'students:register' %}">Register</a>
+                        <a class="btn btn-sm btn-light fw-bold px-3" style="color:#185FA5;" href="{% url 'students:register' %}">Register</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -86,20 +120,22 @@
 
     <div class="container mt-4">
         {% if messages %}
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
             {% for message in messages %}
-                <div>{{ message }}</div>
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             {% endfor %}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
         {% endif %}
 
         {% block content %}{% endblock %}
     </div>
 
-    <footer class="bg-light text-center py-4 mt-5">
-        <p class="text-muted">© 2026 Build Bright University - Student Management System</p>
+    {% block footer %}
+    <footer class="site-footer text-center py-4 mt-5">
+        <p class="mb-0 small">© 2026 Student Management System by Sereyrathana (A1IT_B103)</p>
     </footer>
+    {% endblock %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'js/main.js' %}"></script>

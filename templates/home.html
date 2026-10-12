@@ -1,105 +1,130 @@
-{% extends 'base.html' %}
-
-{% block title %}Home - Student Management System{% endblock %}
+{% extends "base.html" %}
 
 {% block content %}
-<div class="jumbotron bg-light p-5 rounded">
-    <h1 class="display-4">📚 ប្រព័ន្ធគ្រប់គ្រងនិស្សិត</h1>
-    <p class="lead">Student Management System by Build Bright University</p>
-    <hr class="my-4">
-    <p>ស្វាគមន៍ដល់ប្រព័ន្ធគ្រប់គ្រងនិស្សិតដែលប្រើ Django Framework។</p>
+<div class="container my-4">
+    
+    <!-- Hero Banner Component -->
+    <div class="p-5 mb-4 rounded-3 text-white shadow-sm position-relative overflow-hidden" style="background-color: #185FA5;">
+        <div class="container-fluid py-2 position-relative z-1">
+            <div class="text-center">
+                <div class="mb-3">
+                    <span class="p-3 bg-white bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm">
+                        <i class="fas fa-graduation-cap fa-2x text-white"></i>
+                    </span>
+                </div>
+                <h1 class="display-6 fw-bold mb-2">ប្រព័ន្ធគ្រប់គ្រងនិស្សិត</h1>
+                <p class="fs-5 text-white-50 mb-3">Student Management System by Sereyrathana (A1IT_B103)</p>
+                <hr class="w-25 mx-auto border-light opacity-50 mb-3">
+                <p class="small text-white-50 mb-0 font-monospace">Student Management System Using Django Framework</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Metric Summary Cards Grid -->
+    <div class="row g-4 mb-4">
+        <!-- Students Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm rounded-3 h-100 overflow-hidden transition-hover">
+                <div class="card-body p-4 text-center">
+                    <div class="mb-3 text-primary d-inline-flex p-3 rounded-circle" style="background-color: #e3f2fd; color: #185FA5 !important;">
+                        <i class="fas fa-users fa-lg"></i>
+                    </div>
+                    <h6 class="text-muted text-uppercase small fw-bold mb-1">និស្សិត (Students)</h6>
+                    <h2 class="display-6 fw-bold text-dark mb-3">101</h2>
+                    <a href="{% url 'students:student_list' %}" class="btn btn-sm w-100 text-white fw-semibold py-2" style="background-color: #185FA5;">
+                        មើលលម្អិត <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Courses Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm rounded-3 h-100 overflow-hidden transition-hover">
+                <div class="card-body p-4 text-center">
+                    <div class="mb-3 d-inline-flex p-3 rounded-circle" style="background-color: #e3f2fd; color: #185FA5;">
+                        <i class="fas fa-book fa-lg"></i>
+                    </div>
+                    <h6 class="text-muted text-uppercase small fw-bold mb-1">វគ្គសិក្សា (Courses)</h6>
+                    <h2 class="display-6 fw-bold text-dark mb-3">25</h2>
+                    <a href="{% url 'courses:course_list' %}" class="btn btn-sm w-100 text-white fw-semibold py-2" style="background-color: #185FA5;">
+                        មើលលម្អិត <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enrollments Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm rounded-3 h-100 overflow-hidden transition-hover">
+                <div class="card-body p-4 text-center">
+                    <div class="mb-3 d-inline-flex p-3 rounded-circle" style="background-color: #e3f2fd; color: #185FA5;">
+                        <i class="fas fa-user-edit fa-lg"></i>
+                    </div>
+                    <h6 class="text-muted text-uppercase small fw-bold mb-1">ការចុះឈ្មោះ (Enrollments)</h6>
+                    <h2 class="display-6 fw-bold text-dark mb-3">313</h2>
+                    <a href="{% url 'enrollments:enrollment_list' %}" class="btn btn-sm w-100 text-white fw-semibold py-2" style="background-color: #185FA5;">
+                        មើលលម្អិត <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Panel Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm rounded-3 h-100 overflow-hidden transition-hover">
+                <div class="card-body p-4 text-center">
+                    <div class="mb-3 d-inline-flex p-3 rounded-circle" style="background-color: #e3f2fd; color: #185FA5;">
+                        <i class="fas fa-user-shield fa-lg"></i>
+                    </div>
+                    <h6 class="text-muted text-uppercase small fw-bold mb-1">Admin Panel</h6>
+                    <h2 class="display-6 fw-bold text-dark mb-3"><i class="fas fa-shield-alt text-muted fs-3"></i></h2>
+                    <a href="{% url 'admin:index' %}" class="btn btn-sm w-100 text-white fw-semibold py-2" style="background-color: #185FA5;">
+                        ចូលគ្រប់គ្រង <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Analytics Overview Section -->
+    <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-4">
+        <div class="card-header bg-white py-3 border-bottom d-flex align-items-center">
+            <h5 class="mb-0 fw-bold" style="color: #185FA5;"><i class="fas fa-chart-pie me-2"></i>ស្ថានភាព (Analytics Overview)</h5>
+        </div>
+        <div class="card-body p-4 bg-white">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="p-3 border rounded-3 bg-light d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small fw-bold d-block text-uppercase">និស្សិតដែលមានសកម្មភាព</span>
+                            <span class="fs-5 fw-bold text-dark">Active Students</span>
+                        </div>
+                        <span class="badge bg-success fs-6 px-3 py-2">91</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 border rounded-3 bg-light d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small fw-bold d-block text-uppercase">វគ្គសិក្សាសកម្ម</span>
+                            <span class="fs-5 fw-bold text-dark">Active Courses</span>
+                        </div>
+                        <span class="badge bg-primary fs-6 px-3 py-2" style="background-color: #185FA5 !important;">24</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<div class="row mt-5">
-    <div class="col-md-3 mb-4">
-        <div class="card h-100">
-            <div class="card-body text-center">
-                <h5 class="card-title">👥 សិស្ស</h5>
-                <h2 class="text-primary">{{ total_students }}</h2>
-                <p class="text-muted">សិស្សសរុប</p>
-            </div>
-            <div class="card-footer">
-                <a href="{% url 'students:student_list' %}" class="btn btn-sm btn-primary">មើលលម្អិត</a>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-3 mb-4">
-        <div class="card h-100">
-            <div class="card-body text-center">
-                <h5 class="card-title">📖 វគ្គ</h5>
-                <h2 class="text-success">{{ total_courses }}</h2>
-                <p class="text-muted">វគ្គសរុប</p>
-            </div>
-            <div class="card-footer">
-                <a href="{% url 'courses:course_list' %}" class="btn btn-sm btn-success">មើលលម្អិត</a>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-3 mb-4">
-        <div class="card h-100">
-            <div class="card-body text-center">
-                <h5 class="card-title">✍️ ការចុះឈ្មោះ</h5>
-                <h2 class="text-info">{{ total_enrollments }}</h2>
-                <p class="text-muted">ការចុះឈ្មោះសរុប</p>
-            </div>
-            <div class="card-footer">
-                <a href="{% url 'enrollments:enrollment_list' %}" class="btn btn-sm btn-info">មើលលម្អិត</a>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-3 mb-4">
-        <div class="card h-100">
-            <div class="card-body text-center">
-                <h5 class="card-title">⚙️ Admin</h5>
-                <h2 class="text-warning">🔧</h2>
-                <p class="text-muted">ផ្ទាំងគ្រប់គ្រង</p>
-            </div>
-            <div class="card-footer">
-                <a href="/admin/" class="btn btn-sm btn-warning">ចូលគ្រប់គ្រង</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row mt-5">
-    <div class="col-md-4">
-        <h3>📊 ស្ថានភាព</h3>
-        <ul class="list-group">
-            <li class="list-group-item">
-                <strong>សិស្សដែលសកម្ម:</strong> {{ active_students }}
-            </li>
-            <li class="list-group-item">
-                <strong>វគ្គដែលសកម្ម:</strong> {{ active_courses }}
-            </li>
-        </ul>
-    </div>
-    
-    <div class="col-md-8">
-        <h3>🎯 ដូចម្តេច ចាប់ផ្តើម</h3>
-        <div class="alert alert-info">
-            <h5>ត្រើងយល់ដឹង ប្រព័ន្ធគ្រប់គ្រងនិស្សិត:</h5>
-            <ol>
-                <li>ចូលក្នុង Admin Panel សម្រាប់ management ពេញលេញ</li>
-                <li>ឆ្លើយ Students, Courses, Enrollments pages</li>
-                <li>សាកល្បង REST API នៅលើ /api/ URL</li>
-                <li>អានឯកសារលម្អិតក្នុងថត lessons/ (INSTRUCTIONS_KH.md) សម្រាប់ព័ត៌មានបន្ថែម</li>
-                <li>ធ្វើលំហាត់ក្នុងថត lessons/ (PRACTICE_EXERCISES_KH.md) ដើម្បីរៀនអនុវត្តជាក់ស្តែង</li>
-            </ol>
-        </div>
-    </div>
-</div>
-
-<div class="row mt-5">
-    <div class="col-md-12">
-        <h3>🔗 ឯកសារមានប្រយោជន៍</h3>
-        <ul>
-            <li><a href="https://docs.djangoproject.com/" target="_blank">Django Documentation</a></li>
-            <li><a href="https://www.django-rest-framework.org/" target="_blank">Django REST Framework</a></li>
-            <li><a href="https://getbootstrap.com/" target="_blank">Bootstrap Documentation</a></li>
-        </ul>
-    </div>
-</div>
+<style>
+    .transition-hover {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    .transition-hover:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 .5rem 1rem rgba(24, 95, 165, 0.15) !important;
+    }
+</style>
 {% endblock %}

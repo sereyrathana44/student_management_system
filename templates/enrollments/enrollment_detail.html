@@ -1,92 +1,122 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    .ed-hero { background: #185FA5; color: #fff; border-radius: 12px; padding: 1.1rem 1.4rem; display: flex; align-items: center; gap: 1rem; }
+    .ed-hero .sub { color: #B5D4F4; }
+    .ed-icon { min-width: 52px; height: 52px; border-radius: 50%; background: #E6F1FB; color: #185FA5;
+               display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .ed-card { border: 1px solid #85B7EB; border-radius: 12px; overflow: hidden; }
+    .ed-card .card-header { background: #E6F1FB; border-bottom: 1px solid #B5D4F4; color: #0C447C; font-weight: 600; padding: .8rem 1.25rem; }
+    .ed-card .card-header i { color: #185FA5; margin-right: .5rem; }
+    .ed-field { padding: .6rem 0; border-bottom: 1px solid #E6F1FB; }
+    .ed-field:last-child { border-bottom: 0; }
+    .ed-field small { display: block; color: #6c757d; }
+    .ed-field span.val { font-weight: 500; }
+    .ed-tile { background: #E6F1FB; border: 1px solid #B5D4F4; border-radius: 10px; padding: .9rem; text-align: center; height: 100%; }
+    .ed-tile small { display: block; color: #0C447C; }
+    .ed-tile strong { display: block; font-size: 1.6rem; color: #185FA5; font-weight: 600; line-height: 1.3; }
+    .btn-blue { background: #185FA5; border-color: #185FA5; color: #fff; }
+    .btn-blue:hover { background: #0C447C; border-color: #0C447C; color: #fff; }
+    .btn-outline-blue { border-color: #185FA5; color: #185FA5; }
+    .btn-outline-blue:hover { background: #E6F1FB; color: #0C447C; }
+    .btn-soft { background: #E6F1FB; border-color: #B5D4F4; color: #0C447C; }
+    .btn-soft:hover { background: #B5D4F4; color: #0C447C; }
+</style>
+
 <div class="container mt-4">
-    <div class="row">
+    <div class="row g-3">
         <div class="col-lg-8">
-            <h1>Enrollment Details</h1>
-            <hr>
-            
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Enrollment Information</h5>
+
+            <div class="ed-hero mb-4">
+                <span class="ed-icon"><i class="fas fa-clipboard-list"></i></span>
+                <div>
+                    <h1 class="h4 fw-bold mb-1">Enrollment details</h1>
+                    <div class="sub">
+                        {{ enrollment.student.khmer_name|default:enrollment.student.user.get_full_name }}
+                        in {{ enrollment.course.code }} - {{ enrollment.course.title }}
+                    </div>
                 </div>
-                <div class="card-body">
+            </div>
+
+            <!-- Enrollment information -->
+            <div class="card ed-card shadow-sm mb-4">
+                <div class="card-header"><i class="fas fa-info-circle"></i>Enrollment information</div>
+                <div class="card-body px-4 py-3">
                     <div class="row">
                         <div class="col-md-6">
-                            <p><strong>Student:</strong> <span class="text-primary fw-bold">{{ enrollment.student.khmer_name|default:enrollment.student.user.get_full_name }}</span>{% if enrollment.student.khmer_name and enrollment.student.user.get_full_name %} <span class="text-muted">({{ enrollment.student.user.get_full_name }})</span>{% endif %}</p>
-                            <p><strong>Student ID:</strong> {{ enrollment.student.student_id }}</p>
-                            <p><strong>Course:</strong> {{ enrollment.course.code }} - {{ enrollment.course.title }}</p>
-                            <p><strong>Instructor:</strong> {{ enrollment.course.instructor.get_full_name }}</p>
+                            <div class="ed-field">
+                                <small>Student</small>
+                                <span class="val text-primary">{{ enrollment.student.khmer_name|default:enrollment.student.user.get_full_name }}</span>{% if enrollment.student.khmer_name and enrollment.student.user.get_full_name %} <span class="text-muted">({{ enrollment.student.user.get_full_name }})</span>{% endif %}
+                            </div>
+                            <div class="ed-field"><small>Student ID</small><span class="val">{{ enrollment.student.student_id }}</span></div>
+                            <div class="ed-field"><small>Course</small><span class="val">{{ enrollment.course.code }} - {{ enrollment.course.title }}</span></div>
+                            <div class="ed-field"><small>Instructor</small><span class="val">{{ enrollment.course.instructor.get_full_name }}</span></div>
                         </div>
                         <div class="col-md-6">
-                            <p><strong>Status:</strong> 
+                            <div class="ed-field">
+                                <small>Status</small>
                                 {% if enrollment.status == 'ENROLLED' %}
-                                    <span class="badge bg-primary">Enrolled</span>
+                                    <span class="badge" style="background:#185FA5;">Enrolled</span>
                                 {% elif enrollment.status == 'COMPLETED' %}
                                     <span class="badge bg-success">Completed</span>
                                 {% elif enrollment.status == 'DROPPED' %}
                                     <span class="badge bg-danger">Dropped</span>
                                 {% else %}
-                                    <span class="badge bg-warning">Suspended</span>
+                                    <span class="badge bg-warning text-dark">Suspended</span>
                                 {% endif %}
-                            </p>
-                            <p><strong>Enrollment Date:</strong> {{ enrollment.enrollment_date|date:"Y-m-d" }}</p>
-                            <p><strong>Completion Date:</strong> {{ enrollment.completed_date|date:"Y-m-d"|default:"Not Completed" }}</p>
+                            </div>
+                            <div class="ed-field"><small>Enrollment date</small><span class="val">{{ enrollment.enrollment_date|date:"Y-m-d" }}</span></div>
+                            <div class="ed-field"><small>Completion date</small><span class="val">{{ enrollment.completed_date|date:"Y-m-d"|default:"Not completed" }}</span></div>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="card mb-4">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">Grade Information</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <p><strong>Score:</strong> 
-                                <span class="badge bg-warning">{{ enrollment.score|default:"N/A" }}</span>
-                            </p>
+
+            <!-- Grade information -->
+            <div class="card ed-card shadow-sm mb-4">
+                <div class="card-header"><i class="fas fa-certificate"></i>Grade information</div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        <div class="col-4">
+                            <div class="ed-tile"><small>Score</small><strong>{{ enrollment.score|default:"N/A" }}</strong></div>
                         </div>
-                        <div class="col-md-4">
-                            <p><strong>Grade:</strong> 
-                                <span class="badge bg-secondary">{{ enrollment.grade|default:"N/A" }}</span>
-                            </p>
+                        <div class="col-4">
+                            <div class="ed-tile"><small>Grade</small><strong>{{ enrollment.grade|default:"N/A" }}</strong></div>
                         </div>
-                        <div class="col-md-4">
-                            <p><strong>Attendance:</strong> 
-                                <span class="badge bg-success">{{ enrollment.attendance_percentage|default:"N/A" }}%</span>
-                            </p>
+                        <div class="col-4">
+                            <div class="ed-tile">
+                                <small>Attendance</small>
+                                <strong>{% if enrollment.attendance_percentage is not None %}{{ enrollment.attendance_percentage }}%{% else %}N/A{% endif %}</strong>
+                            </div>
                         </div>
                     </div>
                     {% if enrollment.notes %}
-                    <div class="mt-3">
-                        <p><strong>Notes:</strong></p>
-                        <p class="text-muted">{{ enrollment.notes }}</p>
+                    <div class="mt-4">
+                        <small class="text-muted d-block">Notes</small>
+                        <p class="mb-0">{{ enrollment.notes }}</p>
                     </div>
                     {% endif %}
                 </div>
             </div>
         </div>
-        
+
+        <!-- Actions -->
         <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Actions</h5>
-                </div>
-                <div class="card-body">
-                    <a href="{% url 'enrollments:enrollment_update' enrollment.id %}" class="btn btn-primary btn-sm w-100 mb-2">
-                        <i class="fas fa-edit"></i> Edit
+            <div class="card ed-card shadow-sm">
+                <div class="card-header"><i class="fas fa-bolt"></i>Actions</div>
+                <div class="card-body d-grid gap-2">
+                    <a href="{% url 'enrollments:add_grade' enrollment.id %}" class="btn btn-blue btn-sm">
+                        <i class="fas fa-pencil-alt me-1"></i> Add grade
                     </a>
-                    <a href="{% url 'enrollments:add_grade' enrollment.id %}" class="btn btn-success btn-sm w-100 mb-2">
-                        <i class="fas fa-pencil"></i> Add Grade
+                    <a href="{% url 'enrollments:enrollment_update' enrollment.id %}" class="btn btn-outline-blue btn-sm">
+                        <i class="fas fa-edit me-1"></i> Edit
                     </a>
-                    <a href="{% url 'enrollments:enrollment_delete' enrollment.id %}" class="btn btn-danger btn-sm w-100 mb-2">
-                        <i class="fas fa-trash"></i> Delete
+                    <a href="{% url 'enrollments:enrollment_delete' enrollment.id %}" class="btn btn-outline-blue btn-sm">
+                        <i class="fas fa-trash me-1"></i> Delete
                     </a>
-                    <a href="{% url 'enrollments:enrollment_list' %}" class="btn btn-secondary btn-sm w-100">
-                        <i class="fas fa-arrow-left"></i> Back to List
+                    <a href="{% url 'enrollments:enrollment_list' %}" class="btn btn-soft btn-sm">
+                        <i class="fas fa-arrow-left me-1"></i> Back to list
                     </a>
                 </div>
             </div>
